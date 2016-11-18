@@ -4,7 +4,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +19,7 @@ import com.wallpaper.bingfotor.BingFotorApplication;
 import com.wallpaper.bingfotor.R;
 import com.wallpaper.bingfotor.constant.API;
 import com.wallpaper.bingfotor.model.DataBean;
+import com.wallpaper.bingfotor.utils.DateUtils;
 import com.wallpaper.bingfotor.utils.HttpUtils;
 
 import org.json.JSONObject;
@@ -59,7 +59,9 @@ public class MainActivity extends AppCompatActivity {
             month.setTypeface(TEXT_TYPE);
             week.setTypeface(TEXT_TYPE);
             day.setTypeface(TEXT_TYPE);
-            day.setText("18");
+            month.setText(DateUtils.covertMonth(DateUtils.month()));
+            week.setText(DateUtils.convertWeek(DateUtils.week()));
+            day.setText(DateUtils.day()+"");
         }
 
     }
@@ -91,5 +93,6 @@ public class MainActivity extends AppCompatActivity {
 
         mRequestQueue.add(jsonObjectRequest);
     }
+
 
 }
