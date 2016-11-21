@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
                         .placeholder(R.drawable.guide_weixin_bg)
                         .error(R.drawable.guide_weixin_bg)
                         .crossFade()
+                        .centerCrop()
                         .into(bing_bg);
             }
         }, new Response.ErrorListener() {
