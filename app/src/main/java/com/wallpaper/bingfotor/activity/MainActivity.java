@@ -21,6 +21,7 @@ import com.wallpaper.bingfotor.constant.API;
 import com.wallpaper.bingfotor.model.DataBean;
 import com.wallpaper.bingfotor.utils.DateUtils;
 import com.wallpaper.bingfotor.utils.HttpUtils;
+import com.wallpaper.bingfotor.view.LargeImageView;
 
 import org.json.JSONObject;
 
@@ -82,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
                         .placeholder(R.drawable.guide_weixin_bg)
                         .error(R.drawable.guide_weixin_bg)
                         .crossFade()
-                        .centerCrop()
                         .into(bing_bg);
             }
         }, new Response.ErrorListener() {
