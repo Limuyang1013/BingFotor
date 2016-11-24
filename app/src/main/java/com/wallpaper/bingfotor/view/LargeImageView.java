@@ -16,8 +16,7 @@ import java.io.InputStream;
 /**
  * Created by zhy on 15/5/16.
  */
-public class LargeImageView extends View
-{
+public class LargeImageView extends View {
     private BitmapRegionDecoder mDecoder;
     /**
      * 图片的宽度和高度
@@ -66,7 +65,6 @@ public class LargeImageView extends View
             }
         }
     }
-
 
     public void init()
     {

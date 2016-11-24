@@ -2,6 +2,8 @@ package com.wallpaper.bingfotor.activity;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
@@ -21,7 +23,6 @@ import com.wallpaper.bingfotor.constant.API;
 import com.wallpaper.bingfotor.model.DataBean;
 import com.wallpaper.bingfotor.utils.DateUtils;
 import com.wallpaper.bingfotor.utils.HttpUtils;
-import com.wallpaper.bingfotor.view.LargeImageView;
 
 import org.json.JSONObject;
 
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.week)
     TextView week;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +48,15 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         initWidget();
     }
+    public static Handler UIHandler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+
+            }
+        }
+    };
 
     private void initWidget() {
         getUrlInfo();
@@ -82,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                         .load(info.getOriginal_pic())
                         .placeholder(R.drawable.guide_weixin_bg)
                         .error(R.drawable.guide_weixin_bg)
-                        .crossFade()
+                        .crossFade(20)
                         .into(bing_bg);
             }
         }, new Response.ErrorListener() {
@@ -94,6 +105,5 @@ public class MainActivity extends AppCompatActivity {
 
         mRequestQueue.add(jsonObjectRequest);
     }
-
 
 }
