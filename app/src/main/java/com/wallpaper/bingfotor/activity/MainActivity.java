@@ -15,13 +15,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.Glide;
 import com.google.gson.JsonObject;
 import com.wallpaper.bingfotor.BingFotorApplication;
 import com.wallpaper.bingfotor.R;
 import com.wallpaper.bingfotor.constant.API;
 import com.wallpaper.bingfotor.model.DataBean;
 import com.wallpaper.bingfotor.utils.DateUtils;
+import com.wallpaper.bingfotor.utils.GlideUtils;
 import com.wallpaper.bingfotor.utils.HttpUtils;
 
 import org.json.JSONObject;
@@ -89,12 +89,7 @@ public class MainActivity extends AppCompatActivity {
                 response_path[0] =info.getThumbnail_pic();
                 response_path[1]=info.getBmiddle_pic();
                 response_path[2]=info.getOriginal_pic();
-                Glide.with(MainActivity.this)
-                        .load(info.getOriginal_pic())
-                        .placeholder(R.drawable.guide_weixin_bg)
-                        .error(R.drawable.guide_weixin_bg)
-                        .crossFade(20)
-                        .into(bing_bg);
+                GlideUtils.getInstance().loadImage(MainActivity.this,bing_bg,info.getOriginal_pic(),true);
             }
         }, new Response.ErrorListener() {
             @Override

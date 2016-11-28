@@ -25,5 +25,7 @@
             android:screenOrientation="landscape"
                 android:theme="@style/AppTheme"/>
     </application>
-
+    <meta-data
+        android:name="com.bumptech.glide.integration.okhttp3.OkHttpGlideModule"
+        android:value="GlideModule"/>
 </manifest>
