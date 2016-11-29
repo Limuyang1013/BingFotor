@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -39,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     TextView month;
     @BindView(R.id.week)
     TextView week;
+    @BindView(R.id.title)
+    TextView title;
 
 
     @Override
@@ -71,14 +74,19 @@ public class MainActivity extends AppCompatActivity {
             month.setTypeface(TEXT_TYPE);
             week.setTypeface(TEXT_TYPE);
             day.setTypeface(TEXT_TYPE);
+            title.setTypeface(TEXT_TYPE);
             month.setText(DateUtils.covertMonth(DateUtils.month()));
             week.setText(DateUtils.convertWeek(DateUtils.week()));
             day.setText(DateUtils.day()+"");
         }
 
+
+
     }
 
     private void getUrlInfo() {
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
         final String[] response_path = new String[3];
         RequestQueue mRequestQueue = Volley.newRequestQueue(getApplicationContext());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(API.BING_PIC_PIXCEL, null, new Response.Listener<JSONObject>() {
@@ -89,7 +97,9 @@ public class MainActivity extends AppCompatActivity {
                 response_path[0] =info.getThumbnail_pic();
                 response_path[1]=info.getBmiddle_pic();
                 response_path[2]=info.getOriginal_pic();
-                GlideUtils.getInstance().loadImage(MainActivity.this,bing_bg,info.getOriginal_pic(),true);
+//                GlideUtils.getInstance().loadOverrideImage(MainActivity.this,bing_bg,info.getOriginal_pic(),screenWidth,screenHeight);
+                GlideUtils.getInstance().loadImage(MainActivity.this,bing_bg,"http://www.dujin.org/sys/bing/1920.php",true);
+                title.setText(info.getTitle());
             }
         }, new Response.ErrorListener() {
             @Override
