@@ -97,8 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 response_path[0] =info.getThumbnail_pic();
                 response_path[1]=info.getBmiddle_pic();
                 response_path[2]=info.getOriginal_pic();
-//                GlideUtils.getInstance().loadOverrideImage(MainActivity.this,bing_bg,info.getOriginal_pic(),screenWidth,screenHeight);
-                GlideUtils.getInstance().loadImage(MainActivity.this,bing_bg,"http://www.dujin.org/sys/bing/1920.php",true);
+                GlideUtils.getInstance().loadImage(MainActivity.this,bing_bg,API.PIC_PATH,true);
                 title.setText(info.getTitle());
             }
         }, new Response.ErrorListener() {
