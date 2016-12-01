@@ -22,7 +22,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.MainActivity"
-            android:screenOrientation="landscape"
                 android:theme="@style/AppTheme"/>
     </application>
     <meta-data

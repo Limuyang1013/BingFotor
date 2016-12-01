@@ -1,5 +1,6 @@
 package com.wallpaper.bingfotor.activity;
 
+import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +25,7 @@ import com.wallpaper.bingfotor.model.DataBean;
 import com.wallpaper.bingfotor.utils.DateUtils;
 import com.wallpaper.bingfotor.utils.GlideUtils;
 import com.wallpaper.bingfotor.utils.HttpUtils;
+import com.wallpaper.bingfotor.utils.ScreenUtils;
 
 import org.json.JSONObject;
 
@@ -42,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     TextView week;
     @BindView(R.id.title)
     TextView title;
+    private Context context;
 
 
     @Override
@@ -62,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private void initWidget() {
+        context=MainActivity.this;
         getUrlInfo();
         // 加载自定义字体
         try{
@@ -97,7 +101,8 @@ public class MainActivity extends AppCompatActivity {
                 response_path[0] =info.getThumbnail_pic();
                 response_path[1]=info.getBmiddle_pic();
                 response_path[2]=info.getOriginal_pic();
-                GlideUtils.getInstance().loadImage(MainActivity.this,bing_bg,API.PIC_PATH,true);
+//                GlideUtils.getInstance().loadThumbnailImage(context,bing_bg,API.PIC_PATH);
+                GlideUtils.getInstance().loadOverrideImage(context,bing_bg,API.PIC_PATH, ScreenUtils.getScreenWidth(context),ScreenUtils.getScreenHeight(context));
                 title.setText(info.getTitle());
             }
         }, new Response.ErrorListener() {
