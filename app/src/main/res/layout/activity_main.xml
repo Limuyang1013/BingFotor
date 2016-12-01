@@ -26,7 +26,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="80sp"
-            android:text="15"
             android:textColor="@android:color/white"
             android:textStyle="bold"
             />
@@ -48,7 +47,6 @@
                     android:layout_height="wrap_content"
                     android:textSize="25sp"
                     android:textColor="@android:color/white"
-                    android:text="November"
                     android:layout_alignParentBottom="true"
                     android:layout_marginBottom="20dp"
                     />
@@ -57,7 +55,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
-                    android:text="Friday"
                     android:textColor="@android:color/white"
                     android:layout_alignParentBottom="true"
                     />
@@ -85,7 +82,6 @@
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:textColor="@android:color/white"
-                android:text="透过蘑菇的暮光"
                 />
 
         </LinearLayout>
