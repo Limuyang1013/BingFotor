@@ -3,8 +3,6 @@ package com.wallpaper.bingfotor.activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -17,17 +15,20 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
+import com.google.gson.reflect.TypeToken;
 import com.wallpaper.bingfotor.BingFotorApplication;
 import com.wallpaper.bingfotor.R;
 import com.wallpaper.bingfotor.constant.API;
-import com.wallpaper.bingfotor.model.DataBean;
+import com.wallpaper.bingfotor.model.Bean;
 import com.wallpaper.bingfotor.utils.DateUtils;
-import com.wallpaper.bingfotor.utils.GlideUtils;
 import com.wallpaper.bingfotor.utils.HttpUtils;
-import com.wallpaper.bingfotor.utils.ScreenUtils;
 
 import org.json.JSONObject;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     TextView title;
     private Context context;
 
+    List<String> IMAGES;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,18 +57,10 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         initWidget();
     }
-    public static Handler UIHandler=new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what){
-
-            }
-        }
-    };
 
     private void initWidget() {
         context=MainActivity.this;
+        IMAGES=new ArrayList<>();
         getUrlInfo();
         // 加载自定义字体
         try{
@@ -91,19 +86,34 @@ public class MainActivity extends AppCompatActivity {
     private void getUrlInfo() {
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
-        final String[] response_path = new String[3];
         RequestQueue mRequestQueue = Volley.newRequestQueue(getApplicationContext());
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(API.BING_PIC_PIXCEL, null, new Response.Listener<JSONObject>() {
+//        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(API.BING_PIC_PIXCEL, null, new Response.Listener<JSONObject>() {
+//            @Override
+//            public void onResponse(JSONObject response) {
+//                JsonObject jsonObject=HttpUtils.getResposeJsonObject(response).get("data").getAsJsonObject();
+//                DataBean info= BingFotorApplication.gsonInstance().fromJson(jsonObject,DataBean.class);
+//                title.setText(info.getTitle());
+//                Glide.with(context)
+//                        .load("http://s.cn.bing.net/az/hprichbg/rb/ResurrectionBay_ZH-CN10718475653_1920x1080.jpg")
+//                        .centerCrop()
+//                        .override(ScreenUtils.getScreenWidth(context), (int) (ScreenUtils.getScreenWidth(context)*1.2))
+//                        .into(bing_bg);
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Toast.makeText(getApplicationContext(),"网络出错,请检查网络设置",Toast.LENGTH_SHORT).show();
+//            }
+//        });
+        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(API.PIC_PATH, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                JsonObject jsonObject=HttpUtils.getResposeJsonObject(response).get("data").getAsJsonObject();
-                DataBean info= BingFotorApplication.gsonInstance().fromJson(jsonObject,DataBean.class);
-                response_path[0] =info.getThumbnail_pic();
-                response_path[1]=info.getBmiddle_pic();
-                response_path[2]=info.getOriginal_pic();
-//                GlideUtils.getInstance().loadThumbnailImage(context,bing_bg,API.PIC_PATH);
-                GlideUtils.getInstance().loadOverrideImage(context,bing_bg,API.PIC_PATH, ScreenUtils.getScreenWidth(context),ScreenUtils.getScreenHeight(context));
-                title.setText(info.getTitle());
+                JsonArray array = HttpUtils.getResposeJsonObject(response).get("images").getAsJsonArray();
+                Type listType = new TypeToken<List<Bean.ImagesBean>>(){}.getType();
+                List<Bean.ImagesBean> posts = BingFotorApplication.gsonInstance().fromJson(array.toString(), listType);
+                for (int i=0;i<posts.size();i++){
+                    IMAGES.add(posts.get(i).getUrl());
+                }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -114,5 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
         mRequestQueue.add(jsonObjectRequest);
     }
+
+
 
 }

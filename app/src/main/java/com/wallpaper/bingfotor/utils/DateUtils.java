@@ -83,7 +83,7 @@ public class DateUtils {
      *
      * @return
      */
-    public static final int day() {
+    public static int day() {
         return getCalendar().get(Calendar.DATE);
     }
 
