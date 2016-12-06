@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initWidget() {
         context=MainActivity.this;
-        generator = new RandomTransitionGenerator(3500, new DecelerateInterpolator());
+        generator = new RandomTransitionGenerator(5000, new DecelerateInterpolator());
         bing_bg.setTransitionGenerator(generator);
         IMAGES=new ArrayList<>();
         getUrlInfo();
