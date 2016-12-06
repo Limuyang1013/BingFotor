@@ -6,11 +6,17 @@
     android:layout_height="match_parent"
     tools:context="com.wallpaper.bingfotor.activity.MainActivity"
     android:background="@drawable/default_bg">
-    <ImageView
+    <!--<uk.co.senab.photoview.PhotoView-->
+        <!--android:id="@+id/bing_bg"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:adjustViewBounds="true"-->
+        <!--/>-->
+    <com.flaviofaria.kenburnsview.KenBurnsView
         android:id="@+id/bing_bg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+/>
 
     <LinearLayout
         android:layout_width="match_parent"

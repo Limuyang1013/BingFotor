@@ -15,6 +15,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 import com.wallpaper.bingfotor.BingFotorApplication;
@@ -22,6 +23,7 @@ import com.wallpaper.bingfotor.R;
 import com.wallpaper.bingfotor.constant.API;
 import com.wallpaper.bingfotor.model.Bean;
 import com.wallpaper.bingfotor.utils.DateUtils;
+import com.wallpaper.bingfotor.utils.GlideUtils;
 import com.wallpaper.bingfotor.utils.HttpUtils;
 
 import org.json.JSONObject;
@@ -32,11 +34,13 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import uk.co.senab.photoview.PhotoView;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class MainActivity extends AppCompatActivity {
     private Typeface TEXT_TYPE ;
     @BindView(R.id.bing_bg)
-    ImageView bing_bg;
+    KenBurnsView bing_bg;
     @BindView(R.id.day)
     TextView day;
     @BindView(R.id.month)
@@ -48,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private Context context;
 
     List<String> IMAGES;
+    PhotoViewAttacher attacher;
 
 
     @Override
@@ -60,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initWidget() {
         context=MainActivity.this;
+        attacher=new PhotoViewAttacher(bing_bg);
         IMAGES=new ArrayList<>();
         getUrlInfo();
         // 加载自定义字体
@@ -114,6 +120,8 @@ public class MainActivity extends AppCompatActivity {
                 for (int i=0;i<posts.size();i++){
                     IMAGES.add(posts.get(i).getUrl());
                 }
+                GlideUtils.getInstance().loadImage(context,bing_bg,IMAGES.get(0),true);
+                attacher.update();
             }
         }, new Response.ErrorListener() {
             @Override
