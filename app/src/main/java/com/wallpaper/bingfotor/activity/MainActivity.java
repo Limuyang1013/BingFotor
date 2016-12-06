@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,6 +19,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.flaviofaria.kenburnsview.KenBurnsView;
+import com.flaviofaria.kenburnsview.RandomTransitionGenerator;
+import com.flaviofaria.kenburnsview.Transition;
 import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 import com.wallpaper.bingfotor.BingFotorApplication;
@@ -37,6 +42,8 @@ import butterknife.ButterKnife;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
+import static android.R.attr.duration;
+
 public class MainActivity extends AppCompatActivity {
     private Typeface TEXT_TYPE ;
     @BindView(R.id.bing_bg)
@@ -52,7 +59,8 @@ public class MainActivity extends AppCompatActivity {
     private Context context;
 
     List<String> IMAGES;
-    PhotoViewAttacher attacher;
+    RandomTransitionGenerator generator;
+
 
 
     @Override
@@ -65,7 +73,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void initWidget() {
         context=MainActivity.this;
-        attacher=new PhotoViewAttacher(bing_bg);
+        generator = new RandomTransitionGenerator(3500, new DecelerateInterpolator());
+        bing_bg.setTransitionGenerator(generator);
         IMAGES=new ArrayList<>();
         getUrlInfo();
         // 加载自定义字体
@@ -85,7 +94,17 @@ public class MainActivity extends AppCompatActivity {
             day.setText(DateUtils.day()+"");
         }
 
+        bing_bg.setTransitionListener(new KenBurnsView.TransitionListener() {
+            @Override
+            public void onTransitionStart(Transition transition) {
 
+            }
+
+            @Override
+            public void onTransitionEnd(Transition transition) {
+
+            }
+        });
 
     }
 
@@ -93,24 +112,6 @@ public class MainActivity extends AppCompatActivity {
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         RequestQueue mRequestQueue = Volley.newRequestQueue(getApplicationContext());
-//        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(API.BING_PIC_PIXCEL, null, new Response.Listener<JSONObject>() {
-//            @Override
-//            public void onResponse(JSONObject response) {
-//                JsonObject jsonObject=HttpUtils.getResposeJsonObject(response).get("data").getAsJsonObject();
-//                DataBean info= BingFotorApplication.gsonInstance().fromJson(jsonObject,DataBean.class);
-//                title.setText(info.getTitle());
-//                Glide.with(context)
-//                        .load("http://s.cn.bing.net/az/hprichbg/rb/ResurrectionBay_ZH-CN10718475653_1920x1080.jpg")
-//                        .centerCrop()
-//                        .override(ScreenUtils.getScreenWidth(context), (int) (ScreenUtils.getScreenWidth(context)*1.2))
-//                        .into(bing_bg);
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Toast.makeText(getApplicationContext(),"网络出错,请检查网络设置",Toast.LENGTH_SHORT).show();
-//            }
-//        });
         JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(API.PIC_PATH, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -121,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                     IMAGES.add(posts.get(i).getUrl());
                 }
                 GlideUtils.getInstance().loadImage(context,bing_bg,IMAGES.get(0),true);
-                attacher.update();
+                title.setText(posts.get(0).getCopyright().substring(0,posts.get(0).getCopyright().indexOf("(")));
             }
         }, new Response.ErrorListener() {
             @Override
