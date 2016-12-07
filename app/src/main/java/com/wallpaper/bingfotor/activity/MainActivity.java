@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
     TextView week;
     @BindView(R.id.title)
     TextView title;
+    @BindView(R.id.copyright)
+    TextView copyright;
     private Context context;
 
     List<String> IMAGES;
@@ -123,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 GlideUtils.getInstance().loadImage(context,bing_bg,IMAGES.get(0),true);
                 title.setText(posts.get(0).getCopyright().substring(0,posts.get(0).getCopyright().indexOf("(")));
+                copyright.setText(posts.get(0).getCopyright().substring(posts.get(0).getCopyright().indexOf("("),posts.get(0).getCopyright().indexOf(")")+1));
             }
         }, new Response.ErrorListener() {
             @Override
