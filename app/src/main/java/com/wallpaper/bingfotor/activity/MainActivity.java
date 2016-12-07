@@ -1,15 +1,14 @@
 package com.wallpaper.bingfotor.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.View;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.LinearInterpolator;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +26,7 @@ import com.wallpaper.bingfotor.BingFotorApplication;
 import com.wallpaper.bingfotor.R;
 import com.wallpaper.bingfotor.constant.API;
 import com.wallpaper.bingfotor.model.Bean;
+import com.wallpaper.bingfotor.service.NetworkStateService;
 import com.wallpaper.bingfotor.utils.DateUtils;
 import com.wallpaper.bingfotor.utils.GlideUtils;
 import com.wallpaper.bingfotor.utils.HttpUtils;
@@ -39,12 +39,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import uk.co.senab.photoview.PhotoView;
-import uk.co.senab.photoview.PhotoViewAttacher;
 
-import static android.R.attr.duration;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private Typeface TEXT_TYPE ;
     @BindView(R.id.bing_bg)
     KenBurnsView bing_bg;
@@ -62,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
     List<String> IMAGES;
     RandomTransitionGenerator generator;
+    private boolean isPause=false;
 
 
 
@@ -75,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void initWidget() {
         context=MainActivity.this;
+        Intent i=new Intent(context,NetworkStateService.class);
+        startService(i);
         generator = new RandomTransitionGenerator(5000, new DecelerateInterpolator());
         bing_bg.setTransitionGenerator(generator);
         IMAGES=new ArrayList<>();
@@ -108,11 +107,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        bing_bg.setOnClickListener(this);
+
     }
 
     private void getUrlInfo() {
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
         RequestQueue mRequestQueue = Volley.newRequestQueue(getApplicationContext());
         JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(API.PIC_PATH, null, new Response.Listener<JSONObject>() {
             @Override
@@ -138,5 +137,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.bing_bg:
+                if (!isPause) {
+                    bing_bg.pause();
+                    isPause=true;
+                }else {
+                    bing_bg.resume();
+                    isPause=false;
+                }
+                break;
+        }
+    }
 }
