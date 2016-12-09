@@ -21,6 +21,7 @@ import com.wallpaper.bingfotor.view.IBingView;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 /**

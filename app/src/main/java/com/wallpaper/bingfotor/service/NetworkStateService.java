@@ -9,12 +9,23 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.wallpaper.bingfotor.BingFotorApplication;
+import com.wallpaper.bingfotor.model.entity.Bean;
+import com.wallpaper.bingfotor.presenter.IBingPresenter;
+import com.wallpaper.bingfotor.presenter.impl.IBingPresenterImpl;
+import com.wallpaper.bingfotor.utils.GlideUtils;
+import com.wallpaper.bingfotor.view.IBingView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Limuyang on 2016/12/7.
  */
 
-public class NetworkStateService extends Service {
+public class NetworkStateService extends Service{
 
     private static final String tag="tag";
     private ConnectivityManager connectivityManager;
@@ -30,12 +41,9 @@ public class NetworkStateService extends Service {
                 connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
                 info = connectivityManager.getActiveNetworkInfo();
                 if(info != null && info.isAvailable()) {
-                    String name = info.getTypeName();
-                    Log.d(tag, "当前网络名称：" + name);
-                    //doSomething()
+                    Toast.makeText(BingFotorApplication.getInstance(),"网络良好",Toast.LENGTH_SHORT).show();
                 } else {
-                    Log.d(tag, "没有可用网络");
-                    //doSomething()
+                    Toast.makeText(BingFotorApplication.getInstance(),"没有可用网络",Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -65,5 +73,6 @@ public class NetworkStateService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         return super.onStartCommand(intent, flags, startId);
     }
+
 
 }

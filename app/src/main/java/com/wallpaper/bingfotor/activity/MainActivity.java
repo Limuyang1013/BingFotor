@@ -4,48 +4,31 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.RandomTransitionGenerator;
-import com.flaviofaria.kenburnsview.Transition;
-import com.google.gson.JsonArray;
-import com.google.gson.reflect.TypeToken;
 import com.victor.loading.rotate.RotateLoading;
-import com.wallpaper.bingfotor.BingFotorApplication;
 import com.wallpaper.bingfotor.R;
-import com.wallpaper.bingfotor.constant.API;
 import com.wallpaper.bingfotor.model.entity.Bean;
 import com.wallpaper.bingfotor.presenter.IBingPresenter;
 import com.wallpaper.bingfotor.presenter.impl.IBingPresenterImpl;
 import com.wallpaper.bingfotor.service.NetworkStateService;
 import com.wallpaper.bingfotor.utils.DateUtils;
 import com.wallpaper.bingfotor.utils.GlideUtils;
-import com.wallpaper.bingfotor.utils.HttpUtils;
 import com.wallpaper.bingfotor.view.IBingView;
 
-import org.json.JSONObject;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener,IBingView {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,IBingView{
     private Typeface TEXT_TYPE ;
     @BindView(R.id.bing_bg)
     KenBurnsView bing_bg;

@@ -7,4 +7,8 @@ import com.wallpaper.bingfotor.model.IBingModel;
  */
 
 public class IBingModelImpl implements IBingModel {
+    @Override
+    public void getUrlInfo() {
+
+    }
 }
