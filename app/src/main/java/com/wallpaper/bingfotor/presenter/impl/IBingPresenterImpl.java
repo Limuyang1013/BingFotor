@@ -32,11 +32,9 @@ public class IBingPresenterImpl implements IBingPresenter{
     /**
      * 持有View和Model的引用
      */
-    private IBingModel bingModel;
     private IBingView bingView;
     public IBingPresenterImpl(IBingView bingView){
         this.bingView=bingView;
-        bingModel=new IBingModelImpl();
     }
     @Override
     public void getUrlInfo(final List<String> IMAGES) {
