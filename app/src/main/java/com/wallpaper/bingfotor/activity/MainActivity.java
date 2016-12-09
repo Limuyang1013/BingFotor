@@ -4,11 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,14 +23,18 @@ import com.flaviofaria.kenburnsview.RandomTransitionGenerator;
 import com.flaviofaria.kenburnsview.Transition;
 import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
+import com.victor.loading.rotate.RotateLoading;
 import com.wallpaper.bingfotor.BingFotorApplication;
 import com.wallpaper.bingfotor.R;
 import com.wallpaper.bingfotor.constant.API;
-import com.wallpaper.bingfotor.model.Bean;
+import com.wallpaper.bingfotor.model.entity.Bean;
+import com.wallpaper.bingfotor.presenter.IBingPresenter;
+import com.wallpaper.bingfotor.presenter.impl.IBingPresenterImpl;
 import com.wallpaper.bingfotor.service.NetworkStateService;
 import com.wallpaper.bingfotor.utils.DateUtils;
 import com.wallpaper.bingfotor.utils.GlideUtils;
 import com.wallpaper.bingfotor.utils.HttpUtils;
+import com.wallpaper.bingfotor.view.IBingView;
 
 import org.json.JSONObject;
 
@@ -40,7 +45,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,IBingView {
     private Typeface TEXT_TYPE ;
     @BindView(R.id.bing_bg)
     KenBurnsView bing_bg;
@@ -54,12 +59,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView title;
     @BindView(R.id.copyright)
     TextView copyright;
+    @BindView(R.id.rotateloading)
+    RotateLoading rotateLoading;
     private Context context;
 
     List<String> IMAGES;
     RandomTransitionGenerator generator;
     private boolean isPause=false;
-
+    private IBingPresenter bingPresenter;
 
 
     @Override
@@ -77,7 +84,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         generator = new RandomTransitionGenerator(5000, new DecelerateInterpolator());
         bing_bg.setTransitionGenerator(generator);
         IMAGES=new ArrayList<>();
-        getUrlInfo();
         // 加载自定义字体
         try{
             TEXT_TYPE = Typeface.createFromAsset(getAssets(),"HelveticaNeueLTPro-ThEx.otf");
@@ -95,46 +101,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             day.setText(DateUtils.day()+"");
         }
 
-        bing_bg.setTransitionListener(new KenBurnsView.TransitionListener() {
-            @Override
-            public void onTransitionStart(Transition transition) {
-
-            }
-
-            @Override
-            public void onTransitionEnd(Transition transition) {
-
-            }
-        });
 
         bing_bg.setOnClickListener(this);
 
+        bingPresenter=new IBingPresenterImpl(this);
+        bingPresenter.getUrlInfo(IMAGES);
+
     }
 
-    private void getUrlInfo() {
-        RequestQueue mRequestQueue = Volley.newRequestQueue(getApplicationContext());
-        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(API.PIC_PATH, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                JsonArray array = HttpUtils.getResposeJsonObject(response).get("images").getAsJsonArray();
-                Type listType = new TypeToken<List<Bean.ImagesBean>>(){}.getType();
-                List<Bean.ImagesBean> posts = BingFotorApplication.gsonInstance().fromJson(array.toString(), listType);
-                for (int i=0;i<posts.size();i++){
-                    IMAGES.add(posts.get(i).getUrl());
-                }
-                GlideUtils.getInstance().loadImage(context,bing_bg,IMAGES.get(0),true);
-                title.setText(posts.get(0).getCopyright().substring(0,posts.get(0).getCopyright().indexOf("(")));
-                copyright.setText(posts.get(0).getCopyright().substring(posts.get(0).getCopyright().indexOf("("),posts.get(0).getCopyright().indexOf(")")+1));
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(),"网络出错,请检查网络设置",Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        mRequestQueue.add(jsonObjectRequest);
-    }
 
 
     @Override
@@ -150,5 +124,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        bing_bg.pause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        bing_bg.resume();
+    }
+
+    @Override
+    public void showPic(List<Bean.ImagesBean> posts) {
+        GlideUtils.getInstance().loadImage(context,bing_bg,IMAGES.get(0),true);
+        title.setText(posts.get(0).getCopyright().substring(0,posts.get(0).getCopyright().indexOf("(")));
+        copyright.setText(posts.get(0).getCopyright().substring(posts.get(0).getCopyright().indexOf("("),posts.get(0).getCopyright().indexOf(")")+1));
+    }
+
+    @Override
+    public void showLoading() {
+        rotateLoading.start();
+        bing_bg.setClickable(false);
+    }
+
+    @Override
+    public void hideLoading() {
+        rotateLoading.stop();
+        bing_bg.setClickable(true);
     }
 }

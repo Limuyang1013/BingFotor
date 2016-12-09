@@ -10,11 +10,21 @@ import com.google.gson.Gson;
 
 public class BingFotorApplication extends Application {
     private static Gson gson;
+    private static BingFotorApplication instance;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        instance=this;
+    }
 
     public static Gson gsonInstance() {
         if (gson == null) {
             gson = new Gson();
         }
         return gson;
+    }
+    public static BingFotorApplication getInstance(){
+        return instance;
     }
 }

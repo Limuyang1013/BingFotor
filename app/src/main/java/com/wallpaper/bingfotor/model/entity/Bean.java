@@ -1,4 +1,4 @@
-package com.wallpaper.bingfotor.model;
+package com.wallpaper.bingfotor.model.entity;
 
 import java.util.List;
 
