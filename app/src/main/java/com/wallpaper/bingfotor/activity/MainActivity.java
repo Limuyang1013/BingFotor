@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
@@ -28,7 +27,6 @@ import com.wallpaper.bingfotor.utils.NetWorkUtils;
 import com.wallpaper.bingfotor.utils.ScreenUtils;
 import com.wallpaper.bingfotor.view.IBingView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 case 1:
                     Toast.makeText(BingFotorApplication.getInstance(), "下载完成", Toast.LENGTH_SHORT).show();
+                    break;
             }
         }
     };
@@ -109,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bing_bg.setOnLongClickListener(this);
 
         bingPresenter = new IBingPresenterImpl(this);
+        bing_bg.setClickable(false);
         bingPresenter.getUrlInfo(IMAGES);
 
     }
@@ -146,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         GlideUtils.getInstance().loadImage(context, bing_bg, IMAGES.get(0), true);
         title.setText(posts.get(0).getCopyright().substring(0, posts.get(0).getCopyright().indexOf("(")));
         copyright.setText(posts.get(0).getCopyright().substring(posts.get(0).getCopyright().indexOf("("), posts.get(0).getCopyright().indexOf(")") + 1));
+        bing_bg.setClickable(true);
     }
 
     @Override
@@ -164,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onLongClick(View v) {
         switch (v.getId()) {
             case R.id.bing_bg:
-                if (NetWorkUtils.isNetworkConnected(MainActivity.this)) {
+                if (NetWorkUtils.isNetworkConnected(MainActivity.this)&&bing_bg.isClickable()) {
                     showMeTheDialog(MainActivity.this);
                 }
                 break;
@@ -191,7 +192,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private class DownloadThread extends Thread {
         public void run() {
-            ScreenUtils.saveBitmapToJpg(MainActivity.this, ScreenUtils.getBitmap(IMAGES.get(0)));
+            try {
+                ScreenUtils.saveBitmapToJpg(MainActivity.this, ScreenUtils.getBitmap(IMAGES.get(0)));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }
