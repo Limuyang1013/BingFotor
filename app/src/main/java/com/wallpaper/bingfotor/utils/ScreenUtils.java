@@ -2,16 +2,32 @@ package com.wallpaper.bingfotor.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+
+import static android.R.attr.path;
 
 /**
  * 获得屏幕相关的辅助类
@@ -26,6 +42,7 @@ public class ScreenUtils
         /* cannot be instantiated */
         throw new UnsupportedOperationException("cannot be instantiated");
     }
+    public final static String TAG=ScreenUtils.class.getSimpleName();
 
     /**
      * 获得屏幕高度
@@ -156,41 +173,69 @@ public class ScreenUtils
         return bitmap;
     }
 
-
-    /**
-     * 保存图片到sdcard中
-     * @param pBitmap
-     */
-    private static boolean savePic(Bitmap pBitmap,String strName)
-    {
-        FileOutputStream fos=null;
+    public static Bitmap getBitmap(String url) {
+        URL imageURL = null;
+        Bitmap bitmap = null;
+        Log.e("inuni","URL = "+url);
         try {
-            fos=new FileOutputStream(strName);
-            if(null!=fos)
-            {
-                pBitmap.compress(Bitmap.CompressFormat.PNG, 90, fos);
-                fos.flush();
-                fos.close();
-                return true;
-            }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }catch (IOException e) {
+            imageURL = new URL(url);
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        return false;
+        try {
+            HttpURLConnection conn = (HttpURLConnection) imageURL
+                    .openConnection();
+            conn.setDoInput(true);
+            conn.connect();
+            InputStream is = conn.getInputStream();
+            bitmap = BitmapFactory.decodeStream(is);
+            is.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bitmap;
     }
+
     /**
-     * 截图
-     * @param bitmap
-     * @return 截图并且保存sdcard成功返回true，否则返回false
+     * 保存到指定目录，但能立即更新到系统相册中（红米2）
+     *
+     * @param context    上下文环境
+     * @param faceBitmap 位图资源
+     * @return 保存图片的路径
      */
-    public static boolean shotBitmap(Bitmap bitmap)
-    {
+    public static String saveBitmapToJpg(Context context, Bitmap faceBitmap) {
+        String sdStatus = Environment.getExternalStorageState();
+        if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) {
+            Log.i(TAG, "SD *****>> SD卡不存在");
+        } else {
+            Log.i(TAG, "SD *****>> SD卡 存在");
+        }
 
-        return  ScreenUtils.savePic(bitmap, "sdcard/"+System.currentTimeMillis()+".png");
+        // 创建图片保存目录
+        File faceImgDir = new File(Environment.getExternalStorageDirectory(), "BingFotor");
+        if (!faceImgDir.exists()) {
+            faceImgDir.mkdir();
+        }
+
+        // 以系统时间命名文件
+        String faceImgName = DateUtils.today() + ".jpg";
+        File file = new File(faceImgDir, faceImgName);
+
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            faceBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+            fileOutputStream.flush();
+            fileOutputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // 保存后要扫描一下文件，及时更新到系统目录（一定要加绝对路径，这样才能更新）
+        MediaScannerConnection.scanFile(context,
+                new String[]{Environment.getExternalStorageDirectory() + File.separator + "BingFotor" + File.separator + faceImgName}, null, null);
+
+        return (Environment.getExternalStorageDirectory() + File.separator + "BingFotor" + File.separator + faceImgName);
     }
-
 
 }
