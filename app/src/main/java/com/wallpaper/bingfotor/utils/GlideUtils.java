@@ -16,7 +16,8 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
  * @Author: wangyb on 2016/8/27 14:38.
- * @描述 : Glide加载图片的封装，圆形、圆角，模糊等处理操作用到了jp.wasabeef:glide-transformations:2.0.1
+ * @描述 : Glide加载图片的封装，圆形、圆角，模糊等处理操作用到了
+ * compile 'jp.wasabeef:glide-transformations:2.0.1'
  *         Glide默认使用httpurlconnection协议，可以配置为OkHttp
  */
 public class GlideUtils {

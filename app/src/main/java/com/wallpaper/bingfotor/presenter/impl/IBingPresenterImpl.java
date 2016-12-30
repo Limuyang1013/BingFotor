@@ -47,7 +47,7 @@ public class IBingPresenterImpl implements IBingPresenter{
                 Type listType = new TypeToken<List<Bean.ImagesBean>>(){}.getType();
                 List<Bean.ImagesBean> posts = BingFotorApplication.gsonInstance().fromJson(array.toString(), listType);
                 for (int i=0;i<posts.size();i++){
-                    IMAGES.add(posts.get(i).getUrl());
+                    IMAGES.add("http://www.bing.com/"+posts.get(i).getUrl());
                 }
                 bingView.showPic(posts);
                 bingView.hideLoading();
