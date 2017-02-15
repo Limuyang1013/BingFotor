@@ -11,9 +11,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 import com.wallpaper.bingfotor.BingFotorApplication;
 import com.wallpaper.bingfotor.constant.API;
-import com.wallpaper.bingfotor.model.IBingModel;
 import com.wallpaper.bingfotor.model.entity.Bean;
-import com.wallpaper.bingfotor.model.impl.IBingModelImpl;
 import com.wallpaper.bingfotor.presenter.IBingPresenter;
 import com.wallpaper.bingfotor.utils.HttpUtils;
 import com.wallpaper.bingfotor.view.IBingView;
@@ -21,7 +19,6 @@ import com.wallpaper.bingfotor.view.IBingView;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,8 +43,8 @@ public class IBingPresenterImpl implements IBingPresenter{
                 JsonArray array = HttpUtils.getResposeJsonObject(response).get("images").getAsJsonArray();
                 Type listType = new TypeToken<List<Bean.ImagesBean>>(){}.getType();
                 List<Bean.ImagesBean> posts = BingFotorApplication.gsonInstance().fromJson(array.toString(), listType);
-                for (int i=0;i<posts.size();i++){
-                    IMAGES.add("http://www.bing.com/"+posts.get(i).getUrl());
+                for (int i=0;i<posts.size();i++){                    IMAGES.add("http://www.bing.com/"+posts.get(i).getUrl());
+
                 }
                 bingView.showPic(posts);
                 bingView.hideLoading();

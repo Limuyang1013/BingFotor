@@ -1,9 +1,9 @@
 package com.wallpaper.bingfotor.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,13 +27,13 @@ import com.wallpaper.bingfotor.utils.GlideUtils;
 import com.wallpaper.bingfotor.utils.NetWorkUtils;
 import com.wallpaper.bingfotor.utils.ScreenUtils;
 import com.wallpaper.bingfotor.view.IBingView;
+import com.wallpaper.bingfotor.view.PromptDialog;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cn.refactor.lib.colordialog.PromptDialog;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, IBingView, View.OnLongClickListener {
     private Typeface TEXT_TYPE;
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onLongClick(View v) {
         switch (v.getId()) {
             case R.id.bing_bg:
-                if (NetWorkUtils.isNetworkConnected(MainActivity.this)&&bing_bg.isClickable()) {
+                if (NetWorkUtils.isNetworkConnected(MainActivity.this) && bing_bg.isClickable()) {
                     showMeTheDialog(MainActivity.this);
                 }
                 break;
@@ -174,20 +174,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
-    private void showMeTheDialog(Context context) {
-        new PromptDialog(context)
-                .setDialogType(PromptDialog.DIALOG_TYPE_SUCCESS)
-                .setAnimationEnable(true)
-                .setContentText(getString(R.string.downloadnow))
-                .setPositiveListener(getString(R.string.download), new PromptDialog.OnPositiveListener() {
-                    @Override
-                    public void onClick(PromptDialog promptDialog) {
-                        promptDialog.dismiss();
-                        UIHandler.sendEmptyMessage(0);
-                        new DownloadThread().start();
-                        UIHandler.sendEmptyMessage(1);
-                    }
-                }).show();
+    private void showMeTheDialog(final Context context) {
+        PromptDialog.show((Activity) context, "是否下载当前图片", new PromptDialog.OnConfirmListener() {
+            @Override
+            public void onConfirmClick() {
+                if (NetWorkUtils.isNetworkConnected(context)) {
+                    UIHandler.sendEmptyMessage(0);
+                    new DownloadThread().start();
+                }
+                UIHandler.sendEmptyMessage(1);
+            }
+        });
     }
 
 
