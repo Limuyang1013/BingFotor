@@ -1,9 +1,12 @@
 package com.wallpaper.bingfotor.activity;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -52,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @BindView(R.id.rotateloading)
     RotateLoading rotateLoading;
     private Context context;
+    Receiver receiver;
 
     List<String> IMAGES;
     RandomTransitionGenerator generator;
@@ -68,6 +72,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 case 1:
                     Toast.makeText(BingFotorApplication.getInstance(), "下载完成", Toast.LENGTH_SHORT).show();
+                    break;
+                case 2:
+                    Toast.makeText(BingFotorApplication.getInstance(), "网络出错", Toast.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -112,6 +119,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bing_bg.setClickable(false);
         bingPresenter.getUrlInfo(IMAGES);
 
+        receiver=new Receiver();
+        IntentFilter filter=new IntentFilter();
+        filter.addAction("com.communication.NOT_INFO");
+        registerReceiver(receiver,filter);
     }
 
 
@@ -179,22 +190,46 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onConfirmClick() {
                 if (NetWorkUtils.isNetworkConnected(context)) {
-                    UIHandler.sendEmptyMessage(0);
-                    new DownloadThread().start();
+                    new DownloadThread().execute();
                 }
-                UIHandler.sendEmptyMessage(1);
             }
         });
     }
 
 
-    private class DownloadThread extends Thread {
-        public void run() {
-            try {
-                ScreenUtils.saveBitmapToJpg(MainActivity.this, ScreenUtils.getBitmap(IMAGES.get(0)));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+
+    class DownloadThread extends AsyncTask<Void,Void,Void>{
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            UIHandler.sendEmptyMessage(0);
         }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            ScreenUtils.saveBitmapToJpg(MainActivity.this, ScreenUtils.getBitmap(IMAGES.get(0)));
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            UIHandler.sendEmptyMessage(1);
+        }
+    }
+
+    class Receiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            UIHandler.sendEmptyMessage(2);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
     }
 }

@@ -30,6 +30,7 @@ public class NetworkStateService extends Service{
     private static final String tag="tag";
     private ConnectivityManager connectivityManager;
     private NetworkInfo info;
+    private String NET_WRONG="com.communication.NOT_INFO";
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
 
@@ -41,9 +42,11 @@ public class NetworkStateService extends Service{
                 connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
                 info = connectivityManager.getActiveNetworkInfo();
                 if(info != null && info.isAvailable()) {
-                    Toast.makeText(BingFotorApplication.getInstance(),"网络良好",Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(BingFotorApplication.getInstance(),"网络良好",Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(BingFotorApplication.getInstance(),"没有可用网络",Toast.LENGTH_SHORT).show();
+                    Intent it=new Intent();
+                    it.setAction(NET_WRONG);
+                    sendBroadcast(it);
                 }
             }
         }
