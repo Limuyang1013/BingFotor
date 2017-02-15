@@ -219,6 +219,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+
+    //接受广播
     class Receiver extends BroadcastReceiver{
 
         @Override
