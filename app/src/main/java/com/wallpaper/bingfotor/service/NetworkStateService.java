@@ -42,7 +42,6 @@ public class NetworkStateService extends Service{
                 connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
                 info = connectivityManager.getActiveNetworkInfo();
                 if(info != null && info.isAvailable()) {
-//                    Toast.makeText(BingFotorApplication.getInstance(),"网络良好",Toast.LENGTH_SHORT).show();
                 } else {
                     Intent it=new Intent();
                     it.setAction(NET_WRONG);
