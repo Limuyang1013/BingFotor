@@ -208,7 +208,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         protected Void doInBackground(Void... params) {
-            ScreenUtils.saveBitmapToJpg(MainActivity.this, ScreenUtils.getBitmap(IMAGES.get(0)));
+            try{
+                ScreenUtils.saveBitmapToJpg(MainActivity.this, ScreenUtils.getBitmap(IMAGES.get(0)));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             return null;
         }
 
