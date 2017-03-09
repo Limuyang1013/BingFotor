@@ -2,8 +2,9 @@
 [![HHVM](https://img.shields.io/hhvm/symfony/symfony.svg?style=plastic)]()
 [![Crates.io](https://img.shields.io/crates/d/rustc-serialize.svg?style=plastic)]()
 
+### 效果
+> http://olivyw4lw.bkt.clouddn.com/record.gif
 
-### 功能
 获取Bing每日壁纸及其版权信息
 
 ### 下载
