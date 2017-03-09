@@ -2,8 +2,8 @@
 [![HHVM](https://img.shields.io/hhvm/symfony/symfony.svg?style=plastic)]()
 [![Crates.io](https://img.shields.io/crates/d/rustc-serialize.svg?style=plastic)]()
 ### 预览
-<img src="http://olivyw4lw.bkt.clouddn.com/device-2017-03-09-104842.png" width="45%" height="45%"/>
-<iframe height= 300 width= 500 src="http://oasusatoz.bkt.clouddn.com/record.mp4" frameborder=0 allowfullscreen></iframe>
+<img src="http://oasusatoz.bkt.clouddn.com/17-3-9/20655612-file_1489028453445_34c7.png" width="45%" height="45%"/>
+
 ### 功能
 获取Bing每日壁纸及其版权信息
 
