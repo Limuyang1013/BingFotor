@@ -1,5 +1,4 @@
 [![Travis branch](https://img.shields.io/travis/rust-lang/rust/master.svg?style=plastic)]()
-[![HHVM](https://img.shields.io/hhvm/symfony/symfony.svg?style=plastic)]()
 [![Crates.io](https://img.shields.io/crates/d/rustc-serialize.svg?style=plastic)]()
 
 ### 效果
